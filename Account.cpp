@@ -1,10 +1,11 @@
 #include "Account.h"
 
-Account::Account(int an, double bal, string hn)
+Account::Account(int an, double bal, string hn, int p)
 {
 	accountNum = an;
 	balance = bal;
 	holderName = hn;
+	pin = p;
 }
 
 // Getters
@@ -46,5 +47,14 @@ bool Account::withdraw(double amount)
 		return false;
 	}
 	balance -= amount;
+	return true;
+}
+
+bool Account::verifyPin(int enteredPin)
+{
+	if (enteredPin != pin)
+	{
+		return false;
+	}
 	return true;
 }

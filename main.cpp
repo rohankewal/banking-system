@@ -1,5 +1,24 @@
 #include "Bank.h"
 
+// Wrote this function to make the pin auth code less repetitive in the switch statements
+Account *authenticateUser(Bank &bank)
+{
+	int accNum;
+	int pin;
+	cout << "Account number: ";
+	cin >> accNum;
+	cout << "Enter your 4 digit PIN: ";
+	cin >> pin;
+
+	Account *acc = bank.findAccount(accNum);
+	if (acc == nullptr || !acc->verifyPin(pin))
+	{
+		cout << "Invalid account or PIN." << endl;
+		return nullptr;
+	}
+	return acc;
+}
+
 int main()
 {
 	Bank bank("K Trust");
@@ -27,6 +46,7 @@ int main()
 			string name;
 			double deposit;
 			cout << "Enter name: ";
+			cin.ignore();
 			getline(cin, name);
 			cout << "Initial deposit: $";
 			cin >> deposit;
@@ -39,7 +59,8 @@ int main()
 			string name;
 			double deposit;
 			cout << "Enter name: ";
-			cin >> name;
+			cin.ignore();
+			getline(cin, name);
 			cout << "Initial deposit: $";
 			cin >> deposit;
 			int accNum = bank.createCheckingAccount(name, deposit);
@@ -48,10 +69,11 @@ int main()
 		}
 		case 3:
 		{
-			int accNum;
-			cout << "Account number to close: ";
-			cin >> accNum;
-			if (bank.closeAccount(accNum))
+			Account *acc = authenticateUser(bank);
+			if (acc == nullptr)
+				break;
+
+			if (bank.closeAccount(acc->getAccountNum()))
 				cout << "Account closed." << endl;
 			else
 				cout << "Account not found." << endl;
@@ -59,13 +81,14 @@ int main()
 		}
 		case 4:
 		{
-			int accNum;
+			Account *acc = authenticateUser(bank);
+			if (acc == nullptr)
+				break;
+
 			double amount;
-			cout << "Account number: ";
-			cin >> accNum;
 			cout << "Amount to deposit: $";
 			cin >> amount;
-			if (bank.deposit(accNum, amount))
+			if (bank.deposit(acc->getAccountNum(), amount))
 				cout << "Deposit successful!" << endl;
 			else
 				cout << "Deposit failed." << endl;
@@ -73,13 +96,14 @@ int main()
 		}
 		case 5:
 		{
-			int accNum;
+			Account *acc = authenticateUser(bank);
+			if (acc == nullptr)
+				break;
+
 			double amount;
-			cout << "Account number: ";
-			cin >> accNum;
 			cout << "Amount to withdraw: $";
 			cin >> amount;
-			if (bank.withdraw(accNum, amount))
+			if (bank.withdraw(acc->getAccountNum(), amount))
 				cout << "Withdrawal successful!" << endl;
 			else
 				cout << "Withdrawal failed." << endl;
@@ -87,15 +111,19 @@ int main()
 		}
 		case 6:
 		{
-			int fromAcc, toAcc;
+			// Authenticate the sender
+			cout << "--- From Account ---" << endl;
+			Account *from = authenticateUser(bank);
+			if (from == nullptr)
+				break;
+
+			int toAcc;
 			double amount;
-			cout << "From account number: ";
-			cin >> fromAcc;
 			cout << "To account number: ";
 			cin >> toAcc;
 			cout << "Amount to transfer: $";
 			cin >> amount;
-			if (bank.transfer(fromAcc, toAcc, amount))
+			if (bank.transfer(from->getAccountNum(), toAcc, amount))
 				cout << "Transfer successful!" << endl;
 			else
 				cout << "Transfer failed." << endl;
@@ -103,10 +131,11 @@ int main()
 		}
 		case 7:
 		{
-			int accNum;
-			cout << "Account number: ";
-			cin >> accNum;
-			bank.printAccountDetails(accNum);
+			Account *acc = authenticateUser(bank);
+			if (acc == nullptr)
+				break;
+
+			bank.printAccountDetails(acc->getAccountNum());
 			break;
 		}
 		case 8:

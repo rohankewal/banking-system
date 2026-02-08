@@ -12,12 +12,13 @@ class Account
 private:
 	int accountNum;
 	string holderName;
+	int pin;
 
 protected:
 	double balance; // Protected so derived classes can access in withdraw()
 
 public:
-	Account(int an, double bal, string hn);
+	Account(int an, double bal, string hn, int p);
 
 	// Getters
 	int getAccountNum();
@@ -29,6 +30,7 @@ public:
 
 	bool deposite(double amount);
 	virtual bool withdraw(double amount);
+	bool verifyPin(int enteredPin);
 };
 
 #endif

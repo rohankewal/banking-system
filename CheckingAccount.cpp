@@ -1,7 +1,7 @@
 #include "CheckingAccount.h"
 
-CheckingAccount::CheckingAccount(int an, double bal, string hn, double odLimit, double odFee)
-	: Account(an, bal, hn)
+CheckingAccount::CheckingAccount(int an, double bal, string hn, double odLimit, double odFee, int pin)
+	: Account(an, bal, hn, pin)
 {
 	overdraftLimit = odLimit;
 	overdraftFee = odFee;

@@ -1,7 +1,7 @@
 #include "SavingsAccount.h"
 
-SavingsAccount::SavingsAccount(int an, string hn, double initialDeposit, double rate)
-	: Account(an, initialDeposit, hn)
+SavingsAccount::SavingsAccount(int an, string hn, double initialDeposit, double rate, int pin)
+	: Account(an, initialDeposit, hn, pin)
 {
 	interestRate = rate;
 	withdrawlLimit = 6; // Standard limit

@@ -1,9 +1,12 @@
 #include "Bank.h"
+#include <cstdlib>
+#include <ctime>
 
 Bank::Bank(string name)
 {
 	bankName = name;
 	nextAccountNum = 1000;
+	srand(time(0));
 }
 
 // Getters
@@ -17,7 +20,10 @@ int Bank::createSavingsAccount(string holderName, double initialDeposit)
 {
 	double rate = 0.02; // Bank sets 2% interest rate
 	int accNum = nextAccountNum++;
-	accounts[accNum] = new SavingsAccount(accNum, holderName, initialDeposit, rate);
+	// Create PIN
+	int pin = rand() % 9000 + 1000;
+	accounts[accNum] = new SavingsAccount(accNum, holderName, initialDeposit, rate, pin);
+	cout << "Your PIN is: " << pin << " - NOTE: WRITE THIS DOWN AS YOU WON'T SEE THIS AGAIN AND DO NOT SHARE THIS WITH ANYONE" << endl;
 	return accNum;
 }
 
@@ -26,7 +32,10 @@ int Bank::createCheckingAccount(string holderName, double initialDeposit)
 	double odLimit = 500.0; // Bank sets $500 overdraft limit
 	double odFee = 35.0;	// Bank sets $35 overdraft fee
 	int accNum = nextAccountNum++;
-	accounts[accNum] = new CheckingAccount(accNum, initialDeposit, holderName, odLimit, odFee);
+	// Create PIN
+	int pin = rand() % 9000 + 1000;
+	accounts[accNum] = new CheckingAccount(accNum, initialDeposit, holderName, odLimit, odFee, pin);
+	cout << "Your PIN is: " << pin << " - NOTE: WRITE THIS DOWN AS YOU WON'T SEE THIS AGAIN AND DO NOT SHARE THIS WITH ANYONE" << endl;
 	return accNum;
 }
 

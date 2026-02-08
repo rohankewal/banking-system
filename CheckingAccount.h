@@ -10,7 +10,7 @@ private:
 	double overdraftFee;
 
 public:
-	CheckingAccount(int an, double bal, string hn, double odLimit, double odFee);
+	CheckingAccount(int an, double bal, string hn, double odLimit, double odFee, int p);
 
 	// Getters
 	double getOverdraftLimit();

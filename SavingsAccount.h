@@ -12,7 +12,7 @@ private:
 	int withdrawlCount;
 
 public:
-	SavingsAccount(int an, string hn, double initialDeposit, double rate);
+	SavingsAccount(int an, string hn, double initialDeposit, double rate, int p);
 
 	// Getters
 	double getInterestRate();
