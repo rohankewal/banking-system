@@ -7,16 +7,33 @@ Account *authenticateUser(Bank &bank)
 	int pin;
 	cout << "Account number: ";
 	cin >> accNum;
-	cout << "Enter your 4 digit PIN: ";
-	cin >> pin;
 
 	Account *acc = bank.findAccount(accNum);
-	if (acc == nullptr || !acc->verifyPin(pin))
+	if (acc == nullptr)
 	{
-		cout << "Invalid account or PIN." << endl;
+		cout << "Account not found." << endl;
 		return nullptr;
 	}
-	return acc;
+
+	if (acc->isLocked())
+		return nullptr;
+
+	int attempts = 3;
+	while (attempts > 0)
+	{
+		cout << "Enter your 4 digit PIN: ";
+		cin >> pin;
+
+		if (acc->verifyPin(pin))
+			return acc;
+
+		attempts--;
+		if (attempts > 0)
+			cout << "Incorrect PIN. " << attempts << " attempt(s) remaining." << endl;
+	}
+
+	cout << "Account has been locked for 5 minutes." << endl;
+	return nullptr;
 }
 
 // Check for proper amount entered

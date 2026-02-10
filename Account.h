@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -13,6 +14,8 @@ private:
 	int accountNum;
 	string holderName;
 	int pin;
+	int failedAttempts;
+	time_t lockoutTime;
 
 protected:
 	double balance; // Protected so derived classes can access in withdraw()
@@ -31,6 +34,7 @@ public:
 	bool deposite(double amount);
 	virtual bool withdraw(double amount);
 	bool verifyPin(int enteredPin);
+	bool isLocked();
 };
 
 #endif
