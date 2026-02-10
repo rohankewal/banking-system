@@ -19,6 +19,20 @@ Account *authenticateUser(Bank &bank)
 	return acc;
 }
 
+// Check for proper amount entered
+double getValidAmount(string prompt)
+{
+	double amount;
+	cout << prompt;
+	while (!(cin >> amount))
+	{
+		cout << "That is not a valid ammount.  Please try again: $";
+		cin.clear();
+		cin.ignore(10000, '\n');
+	}
+	return amount;
+}
+
 int main()
 {
 	Bank bank("K Trust");
@@ -27,14 +41,13 @@ int main()
 	while (true)
 	{
 		cout << "\n===== " << bank.getBankName() << " =====" << endl;
-		cout << "1. Open Savings Account" << endl;
-		cout << "2. Open Checking Account" << endl;
-		cout << "3. Close Account" << endl;
-		cout << "4. Deposit" << endl;
-		cout << "5. Withdraw" << endl;
-		cout << "6. Transfer" << endl;
-		cout << "7. Check Balance" << endl;
-		cout << "8. Print All Accounts" << endl;
+		cout << "1. Open Account" << endl;
+		cout << "2. Close Account" << endl;
+		cout << "3. Deposit" << endl;
+		cout << "4. Withdraw" << endl;
+		cout << "5. Transfer" << endl;
+		cout << "6. Check Balance" << endl;
+		cout << "7. Print All Accounts" << endl;
 		cout << "0. Exit" << endl;
 		cout << "Enter choice: ";
 		cin >> userChoice;
@@ -43,31 +56,34 @@ int main()
 		{
 		case 1:
 		{
+			int accType;
+			cout << "1. Savings Account" << endl;
+			cout << "2. Checking Account" << endl;
+			cout << "Select account type: ";
+			cin >> accType;
+
+			if (accType != 1 && accType != 2)
+			{
+				cout << "Invalid account type." << endl;
+				break;
+			}
+
 			string name;
-			double deposit;
 			cout << "Enter name: ";
 			cin.ignore();
 			getline(cin, name);
-			cout << "Initial deposit: $";
-			cin >> deposit;
-			int accNum = bank.createSavingsAccount(name, deposit);
-			cout << "Savings account created! Number: " << accNum << endl;
+			double deposit = getValidAmount("Initial deposite: $");
+
+			int accNum;
+			if (accType == 1)
+				accNum = bank.createSavingsAccount(name, deposit);
+			else
+				accNum = bank.createCheckingAccount(name, deposit);
+
+			cout << "Account created! Number: " << accNum << endl;
 			break;
 		}
 		case 2:
-		{
-			string name;
-			double deposit;
-			cout << "Enter name: ";
-			cin.ignore();
-			getline(cin, name);
-			cout << "Initial deposit: $";
-			cin >> deposit;
-			int accNum = bank.createCheckingAccount(name, deposit);
-			cout << "Checking account created! Number: " << accNum << endl;
-			break;
-		}
-		case 3:
 		{
 			Account *acc = authenticateUser(bank);
 			if (acc == nullptr)
@@ -79,37 +95,33 @@ int main()
 				cout << "Account not found." << endl;
 			break;
 		}
-		case 4:
+		case 3:
 		{
 			Account *acc = authenticateUser(bank);
 			if (acc == nullptr)
 				break;
 
-			double amount;
-			cout << "Amount to deposit: $";
-			cin >> amount;
+			double amount = getValidAmount("Amount to deposit: $");
 			if (bank.deposit(acc->getAccountNum(), amount))
 				cout << "Deposit successful!" << endl;
 			else
 				cout << "Deposit failed." << endl;
 			break;
 		}
-		case 5:
+		case 4:
 		{
 			Account *acc = authenticateUser(bank);
 			if (acc == nullptr)
 				break;
 
-			double amount;
-			cout << "Amount to withdraw: $";
-			cin >> amount;
+			double amount = getValidAmount("Amount to withdraw: $");
 			if (bank.withdraw(acc->getAccountNum(), amount))
 				cout << "Withdrawal successful!" << endl;
 			else
 				cout << "Withdrawal failed." << endl;
 			break;
 		}
-		case 6:
+		case 5:
 		{
 			// Authenticate the sender
 			cout << "--- From Account ---" << endl;
@@ -118,18 +130,16 @@ int main()
 				break;
 
 			int toAcc;
-			double amount;
 			cout << "To account number: ";
 			cin >> toAcc;
-			cout << "Amount to transfer: $";
-			cin >> amount;
+			double amount = getValidAmount("Amount to transfer: $");
 			if (bank.transfer(from->getAccountNum(), toAcc, amount))
 				cout << "Transfer successful!" << endl;
 			else
 				cout << "Transfer failed." << endl;
 			break;
 		}
-		case 7:
+		case 6:
 		{
 			Account *acc = authenticateUser(bank);
 			if (acc == nullptr)
@@ -138,7 +148,7 @@ int main()
 			bank.printAccountDetails(acc->getAccountNum());
 			break;
 		}
-		case 8:
+		case 7:
 			bank.printAllAccounts();
 			break;
 		case 0:
