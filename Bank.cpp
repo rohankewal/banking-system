@@ -7,6 +7,7 @@ Bank::Bank(string name)
 	bankName = name;
 	nextAccountNum = 1000;
 	srand(time(0));
+	adminPasswordHash = hash<string>{}("admin123"); // Default admin password
 }
 
 // Getters
@@ -95,6 +96,24 @@ bool Bank::transfer(int fromAccNum, int toAccNum, double amount)
 		return true;
 	}
 	return false;
+}
+
+// Admin
+bool Bank::verifyAdmin(string password)
+{
+	return hash<string>{}(password) == adminPasswordHash;
+}
+
+void Bank::unlockAccount(int accountNum)
+{
+	Account *acc = findAccount(accountNum);
+	if (acc == nullptr)
+	{
+		cout << "Account not found." << endl;
+		return;
+	}
+	acc->resetLockout();
+	cout << "Account " << accountNum << " has been unlocked." << endl;
 }
 
 // Reporting

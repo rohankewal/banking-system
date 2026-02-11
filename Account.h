@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <functional>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ class Account
 private:
 	int accountNum;
 	string holderName;
-	int pin;
+	size_t pin;
 	int failedAttempts;
 	time_t lockoutTime;
 
@@ -35,6 +36,7 @@ public:
 	virtual bool withdraw(double amount);
 	bool verifyPin(int enteredPin);
 	bool isLocked();
+	void resetLockout();
 };
 
 #endif

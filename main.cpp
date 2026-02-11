@@ -36,6 +36,15 @@ Account *authenticateUser(Bank &bank)
 	return nullptr;
 }
 
+// Confirm action before proceeding
+bool confirmAction(string message)
+{
+	char choice;
+	cout << message << " (y/n): ";
+	cin >> choice;
+	return choice == 'y' || choice == 'Y';
+}
+
 // Check for proper amount entered
 double getValidAmount(string prompt)
 {
@@ -64,7 +73,7 @@ int main()
 		cout << "4. Withdraw" << endl;
 		cout << "5. Transfer" << endl;
 		cout << "6. Check Balance" << endl;
-		cout << "7. Print All Accounts" << endl;
+		cout << "7. Admin" << endl;
 		cout << "0. Exit" << endl;
 		cout << "Enter choice: ";
 		cin >> userChoice;
@@ -106,6 +115,14 @@ int main()
 			if (acc == nullptr)
 				break;
 
+			cout << "Closing account #" << acc->getAccountNum()
+				 << " (" << acc->getHolderName() << ") with balance $" << acc->getBalance() << endl;
+			if (!confirmAction("Are you sure?"))
+			{
+				cout << "Cancelled." << endl;
+				break;
+			}
+
 			if (bank.closeAccount(acc->getAccountNum()))
 				cout << "Account closed." << endl;
 			else
@@ -119,6 +136,11 @@ int main()
 				break;
 
 			double amount = getValidAmount("Amount to deposit: $");
+			if (!confirmAction("Deposit $" + to_string(amount) + " to account #" + to_string(acc->getAccountNum()) + "?"))
+			{
+				cout << "Cancelled." << endl;
+				break;
+			}
 			if (bank.deposit(acc->getAccountNum(), amount))
 				cout << "Deposit successful!" << endl;
 			else
@@ -132,6 +154,11 @@ int main()
 				break;
 
 			double amount = getValidAmount("Amount to withdraw: $");
+			if (!confirmAction("Withdraw $" + to_string(amount) + " from account #" + to_string(acc->getAccountNum()) + "?"))
+			{
+				cout << "Cancelled." << endl;
+				break;
+			}
 			if (bank.withdraw(acc->getAccountNum(), amount))
 				cout << "Withdrawal successful!" << endl;
 			else
@@ -150,6 +177,11 @@ int main()
 			cout << "To account number: ";
 			cin >> toAcc;
 			double amount = getValidAmount("Amount to transfer: $");
+			if (!confirmAction("Transfer $" + to_string(amount) + " from account #" + to_string(from->getAccountNum()) + " to account #" + to_string(toAcc) + "?"))
+			{
+				cout << "Cancelled." << endl;
+				break;
+			}
 			if (bank.transfer(from->getAccountNum(), toAcc, amount))
 				cout << "Transfer successful!" << endl;
 			else
@@ -166,8 +198,71 @@ int main()
 			break;
 		}
 		case 7:
-			bank.printAllAccounts();
+		{
+			string password;
+			cout << "Enter admin password: ";
+			cin >> password;
+
+			if (!bank.verifyAdmin(password))
+			{
+				cout << "Invalid admin password." << endl;
+				break;
+			}
+
+			int adminChoice;
+			cout << "\n--- Admin Menu ---" << endl;
+			cout << "1. View All Accounts" << endl;
+			cout << "2. Close Account" << endl;
+			cout << "3. Unlock Account" << endl;
+			cout << "4. View Account Details" << endl;
+			cout << "0. Back to Main Menu" << endl;
+			cout << "Enter choice: ";
+			cin >> adminChoice;
+
+			switch (adminChoice)
+			{
+			case 1:
+				bank.printAllAccounts();
+				break;
+			case 2:
+			{
+				int accNum;
+				cout << "Account number to close: ";
+				cin >> accNum;
+				if (!confirmAction("Close account #" + to_string(accNum) + "?"))
+				{
+					cout << "Cancelled." << endl;
+					break;
+				}
+				if (bank.closeAccount(accNum))
+					cout << "Account closed." << endl;
+				else
+					cout << "Account not found." << endl;
+				break;
+			}
+			case 3:
+			{
+				int accNum;
+				cout << "Account number to unlock: ";
+				cin >> accNum;
+				bank.unlockAccount(accNum);
+				break;
+			}
+			case 4:
+			{
+				int accNum;
+				cout << "Account number: ";
+				cin >> accNum;
+				bank.printAccountDetails(accNum);
+				break;
+			}
+			case 0:
+				break;
+			default:
+				cout << "Invalid choice." << endl;
+			}
 			break;
+		}
 		case 0:
 			cout << "Goodbye!" << endl;
 			return 0;

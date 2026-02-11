@@ -5,7 +5,7 @@ Account::Account(int an, double bal, string hn, int p)
 	accountNum = an;
 	balance = bal;
 	holderName = hn;
-	pin = p;
+	pin = hash<int>{}(p); // Store hash, not the actual PIN
 	failedAttempts = 0;
 	lockoutTime = 0;
 }
@@ -54,7 +54,7 @@ bool Account::withdraw(double amount)
 
 bool Account::verifyPin(int enteredPin)
 {
-	if (enteredPin != pin)
+	if (hash<int>{}(enteredPin) != pin) // Hash input before comparing
 	{
 		failedAttempts++;
 		if (failedAttempts >= 3)
@@ -84,4 +84,10 @@ bool Account::isLocked()
 	// Lockout expired, reset
 	lockoutTime = 0;
 	return false;
+}
+
+void Account::resetLockout()
+{
+	lockoutTime = 0;
+	failedAttempts = 0;
 }
