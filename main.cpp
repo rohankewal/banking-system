@@ -62,6 +62,7 @@ double getValidAmount(string prompt)
 int main()
 {
 	Bank bank("K Trust");
+	bank.loadData();
 	int userChoice = 0;
 
 	while (true)

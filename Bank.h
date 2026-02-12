@@ -13,6 +13,7 @@ private:
 	map<int, Account *> accounts;
 	int nextAccountNum;
 	size_t adminPasswordHash;
+	string dataFile = "bank_data.bin";
 
 public:
 	Bank(string name);
@@ -34,6 +35,10 @@ public:
 	// Admin
 	bool verifyAdmin(string password);
 	void unlockAccount(int accountNum);
+
+	// File persistence
+	void saveData();
+	void loadData();
 
 	// Reporting
 	void printAccountDetails(int accountNum);

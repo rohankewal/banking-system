@@ -7,6 +7,15 @@ CheckingAccount::CheckingAccount(int an, double bal, string hn, double odLimit, 
 	overdraftFee = odFee;
 }
 
+// Loading constructor - for restoring from binary file
+CheckingAccount::CheckingAccount(int an, double bal, string hn, double odLimit, double odFee,
+								 size_t hashedPin, int fa, time_t lt)
+	: Account(an, bal, hn, hashedPin, fa, lt)
+{
+	overdraftLimit = odLimit;
+	overdraftFee = odFee;
+}
+
 // Getters
 double CheckingAccount::getOverdraftLimit()
 {

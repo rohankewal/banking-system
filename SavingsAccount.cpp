@@ -8,6 +8,16 @@ SavingsAccount::SavingsAccount(int an, string hn, double initialDeposit, double 
 	withdrawlCount = 0;
 }
 
+// Loading constructor - for restoring from binary file
+SavingsAccount::SavingsAccount(int an, string hn, double bal, double rate,
+							   size_t hashedPin, int fa, time_t lt, int wLimit, int wCount)
+	: Account(an, bal, hn, hashedPin, fa, lt)
+{
+	interestRate = rate;
+	withdrawlLimit = wLimit;
+	withdrawlCount = wCount;
+}
+
 // Getters
 double SavingsAccount::getInterestRate()
 {

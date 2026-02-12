@@ -10,6 +10,17 @@ Account::Account(int an, double bal, string hn, int p)
 	lockoutTime = 0;
 }
 
+// Loading constructor - pin is already hashed, no need to hash again
+Account::Account(int an, double bal, string hn, size_t hashedPin, int fa, time_t lt)
+{
+	accountNum = an;
+	balance = bal;
+	holderName = hn;
+	pin = hashedPin; // Already hashed - store directly
+	failedAttempts = fa;
+	lockoutTime = lt;
+}
+
 // Getters
 int Account::getAccountNum()
 {
@@ -24,6 +35,21 @@ double Account::getBalance()
 string Account::getHolderName()
 {
 	return holderName;
+}
+
+size_t Account::getPin()
+{
+	return pin;
+}
+
+int Account::getFailedAttempts()
+{
+	return failedAttempts;
+}
+
+time_t Account::getLockoutTime()
+{
+	return lockoutTime;
 }
 
 // Setter(s)

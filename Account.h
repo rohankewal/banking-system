@@ -5,12 +5,15 @@
 #include <string>
 #include <ctime>
 #include <functional>
+#include <fstream>
 
 using namespace std;
 
 // Account class which Savings and Checking will inherite from
 class Account
 {
+	friend class Bank; // Bank needs access for save/load
+
 private:
 	int accountNum;
 	string holderName;
@@ -21,6 +24,9 @@ private:
 protected:
 	double balance; // Protected so derived classes can access in withdraw()
 
+	// Loading constructor - pin is already hashed from file
+	Account(int an, double bal, string hn, size_t hashedPin, int fa, time_t lt);
+
 public:
 	Account(int an, double bal, string hn, int p);
 
@@ -28,6 +34,9 @@ public:
 	int getAccountNum();
 	double getBalance();
 	string getHolderName();
+	size_t getPin();
+	int getFailedAttempts();
+	time_t getLockoutTime();
 
 	// Setter(s)
 	void setHolderName(string n);

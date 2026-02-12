@@ -14,6 +14,10 @@ private:
 public:
 	SavingsAccount(int an, string hn, double initialDeposit, double rate, int p);
 
+	// Loading constructor (pin already hashed)
+	SavingsAccount(int an, string hn, double bal, double rate,
+				   size_t hashedPin, int fa, time_t lt, int wLimit, int wCount);
+
 	// Getters
 	double getInterestRate();
 	int getWithdrawLimit();
